@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  rabbitmq:
+    hostname: 'rabbitmq'
+    image: "rabbitmq:3.10-management"
+    ports:
+      - "5672:5672" # amqp
+      - "15672:15672" # management console
+    volumes:
+      - "./data:/var/lib/rabbitmq/mnesia/" # persistent data
