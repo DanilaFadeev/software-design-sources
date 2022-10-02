@@ -1,7 +1,10 @@
-import AmqpClient from './AmqpClient.js';
+import AmqpClient, { ContentType } from './AmqpClient.js';
 
 (async () => {
-	const client = new AmqpClient({ amqpUrl: 'amqp://localhost:5672' });
+	const client = new AmqpClient({
+		amqpUrl: 'amqp://localhost:5672',
+		contentType: ContentType.json
+	});
 
 	await client.assertExchange('client-pushes', 'topic', { durable: true });
 

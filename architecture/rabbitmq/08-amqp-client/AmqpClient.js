@@ -2,7 +2,7 @@ import amqplib from 'amqplib';
 
 const isDefined = value => typeof value !== 'undefined';
 
-const ContentType = {
+export const ContentType = {
 	json: 'application/json',
 	text: 'text/plain'
 };
@@ -17,8 +17,16 @@ export default class AmqpClient {
 
 	#queueCache = {};
 
+	/**
+	 * @param {{
+	 * 	amqpUrl: string,
+	 * 	prefetch: number,
+	 * 	contentType: 'json' | 'text'
+	 * }} config AmqpClient configuration
+	 */
 	constructor(config) {
 		const defaults = {
+			prefetch: 1,
 			contentType: ContentType.json
 		};
 
@@ -32,12 +40,17 @@ export default class AmqpClient {
 		}
 	}
 
+	/**
+	 * Opens a new AMQP connection and channel if not opened yet.
+	 * @returns 
+	 */
 	async connect() {
 		if (this.channel) {
 			return this.channel;
 		}
 		try {
 			this.channel = await this.#openChannel();
+			this.channel.prefetch(this.config.prefetch);
 		} catch (error) {
 			this.channel = null;
 			console.error(`Failed to connect: ${error.message}`);
@@ -49,6 +62,14 @@ export default class AmqpClient {
 		this.channel?.disconnect();
 	}
 
+	/**
+	 * Publishes a new message with the routing key.
+	 * 
+	 * @param {string} exchange 
+	 * @param {string} routingKey 
+	 * @param {any} message 
+	 * @param {*} options 
+	 */
 	async publish(exchange, routingKey, message, options) {
 		await this.connect();
 
@@ -61,6 +82,13 @@ export default class AmqpClient {
 		});
 	}
 
+	/**
+	 * Subscribes to the queue.
+	 * 
+	 * @param {string} queue Queue name
+	 * @param {(message) => void} handler Queue messages handler
+	 * @param {*} options Queue subscription options
+	 */
 	async subscribe(queue, handler, options) {
 		await this.connect();
 
@@ -78,6 +106,24 @@ export default class AmqpClient {
 		}, options);
 	}
 
+	/**
+	 * Explicitly assert an exchange. Caches the exchange once asserted.
+	 * 
+	 * @param {string} exchange The name of the exchange
+	 * @param {'direct' | 'topic' | 'fanout' | 'headers' | 'match'} type Exchange type
+	 * @param {{
+	 * 	durable?: boolean,
+	 * 	internal?: boolean,
+	 * 	autoDelete?: boolean,
+	 * 	alternateExchange?: string,
+	 * 	arguments?: any
+	 * }} [options] Exchange declaration options
+	 * @returns {Promise<{
+	 * 	exchange: string,
+	 * 	messageCount: number,
+	 * 	consumerCount: number
+	 * }>} Exchange assertion result
+	 */
 	async assertExchange(exchange, type, options) {
 		await this.connect();
 
@@ -97,6 +143,24 @@ export default class AmqpClient {
 		return assertion;
 	}
 
+	/**
+	 * Explicitly assert a queue. Caches the queue once asserted.
+	 * 
+	 * @param {string} queue The name of the queue
+	 * @param {{
+	 *  exclusive?: boolean,
+	 * 	durable?: boolean,
+	 * 	autoDelete?: boolean,
+	 * 	arguments?: any,
+	 * 	messageTtl?: number,
+	 * 	expires?: number,
+	 * 	deadLetterExchange?: string,
+	 * 	deadLetterRoutingKey?: string,
+	 * 	maxLength?: number,
+	 * 	maxPriority?: number
+	 * }} [options] Queue declaration options
+	 * @returns {Promise<{ queue: string }>} Queue assertion result
+	 */
 	async assertQueue(queue, options) {
 		await this.connect();
 
@@ -116,6 +180,13 @@ export default class AmqpClient {
 		return assertion;
 	}
 
+	/**
+	 * Binds queue to exchange by routing pattern.
+	 * 
+	 * @param {string} queue The name of the queue
+	 * @param {*} exchange The name of the exchange
+	 * @param {*} pattern Binding pattern
+	 */
 	async bindQueue(queue, exchange, pattern) {
 		await this.connect();
 		await this.channel.bindQueue(queue, exchange, pattern);
