@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service Location {
+  rpc Track(Empty) returns (stream Point);
+  rpc Share(stream Point) returns (Empty);
+  rpc Tune(stream Point) returns (stream TuneOptions);
+}
+
+message Point {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+message TuneOptions {
+  int32 tune = 1;
+}
