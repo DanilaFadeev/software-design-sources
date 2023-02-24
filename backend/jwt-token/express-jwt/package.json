@@ -1,0 +1,23 @@
+{
+  "name": "express-jwt-example",
+  "version": "0.0.0",
+  "description": "The JWT authentication done in Express",
+  "private": true,
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "express",
+    "jwt",
+    "example",
+    "auth"
+  ],
+  "author": "Danila Demidovich <demidovich.daniil@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
