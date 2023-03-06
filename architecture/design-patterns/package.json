@@ -1,0 +1,19 @@
+{
+  "name": "design-patterns",
+  "version": "0.0.0",
+  "description": "Design Patterns implementation and examples",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "design",
+    "patterns"
+  ],
+  "author": "Danila Demidovich <demidovich.daniil@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.14.2"
+  }
+}
