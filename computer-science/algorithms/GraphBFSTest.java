@@ -32,4 +32,30 @@ public class GraphBFSTest {
     // 1 -> 2 -> 4 -> 6 -> 8
     assertEquals(2, GraphBFS.shortestPath(graph, 1, 8));
   }
+
+  @Test()
+  public void bfs_0_1() {
+    Map<Integer, List<int[]>> graph = new HashMap<>();
+    graph.put(1, List.of(new int[] { 2, 1 }, new int[] { 3, 0 }));
+    graph.put(2, List.of());
+    graph.put(3, List.of(new int[] { 2, 0 }));
+
+    assertEquals(0, GraphBFS.bfs_0_1(graph, 1, 2));
+  }
+
+  @Test()
+  public void bfs_0_1_distances() {
+    Map<Integer, List<int[]>> graph = new HashMap<>();
+    graph.put(1, List.of(new int[] { 2, 1 }, new int[] { 3, 0 }));
+    graph.put(2, List.of(new int[] { 3, 1 }));
+    graph.put(3, List.of(new int[] { 4, 1 }, new int[] { 5, 0 }));
+    graph.put(4, List.of(new int[] { 5, 1 }));
+    graph.put(5, List.of(new int[] { 4, 0 }));
+
+    Map<Integer, Integer> distances = GraphBFS.bfs_0_1_distances(graph, 1);
+    assertEquals(Integer.valueOf(1), distances.get(2)); // 1 -> 2
+    assertEquals(Integer.valueOf(0), distances.get(3)); // 1 -> 3
+    assertEquals(Integer.valueOf(0), distances.get(4)); // 1 -> 3 -> 5 -> 4
+    assertEquals(Integer.valueOf(0), distances.get(5)); // 1 -> 3 -> 5
+  }
 }
