@@ -1,3 +1,5 @@
+package algorithms.graphs;
+
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
@@ -5,7 +7,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class DijkstraTest {
+public class DijkstraPQTest {
 
   private Map<Integer, List<Entry<Integer, Double>>> graph = new HashMap<>();
 
@@ -23,7 +25,7 @@ public class DijkstraTest {
   @Test
   public void testShortestPathSameNode() {
     // The shortest path from a node to itself should be 0.
-    var result = Dijkstra.getShortestPath(graph, 0, 0);
+    var result = DijkstraPQ.getShortestPath(graph, 0, 0);
     assertEquals(0.0, result.getValue(), 0);
     assertEquals(List.of(0), result.getKey());
   }
@@ -31,7 +33,7 @@ public class DijkstraTest {
   @Test
   public void testShortestPathDirectConnection() {
     // Direct connection from 0 to 1
-    var result = Dijkstra.getShortestPath(graph, 0, 1);
+    var result = DijkstraPQ.getShortestPath(graph, 0, 1);
     assertEquals(2.0, result.getValue(), 0);
     assertEquals(List.of(0, 1), result.getKey());
   }
@@ -39,15 +41,15 @@ public class DijkstraTest {
   @Test
   public void testShortestPathComplexPath() {
     // Testing paths that require more hops
-    var result1 = Dijkstra.getShortestPath(graph, 0, 2); // Path 0 -> 1 -> 2
+    var result1 = DijkstraPQ.getShortestPath(graph, 0, 2); // Path 0 -> 1 -> 2
     assertEquals(3.0, result1.getValue(), 0);
     assertEquals(List.of(0, 1, 2), result1.getKey());
 
-    var result2 = Dijkstra.getShortestPath(graph, 0, 3); // Path 0 -> 1 -> 2 -> 3
+    var result2 = DijkstraPQ.getShortestPath(graph, 0, 3); // Path 0 -> 1 -> 2 -> 3
     assertEquals(6.0, result2.getValue(), 0);
     assertEquals(List.of(0, 1, 2, 3), result2.getKey());
 
-    var result3 = Dijkstra.getShortestPath(graph, 0, 5); // Path 0 -> 1 -> 2 -> 3 -> 5
+    var result3 = DijkstraPQ.getShortestPath(graph, 0, 5); // Path 0 -> 1 -> 2 -> 3 -> 5
     assertEquals(7.0, result3.getValue(), 0);
     assertEquals(List.of(0, 1, 2, 3, 5), result3.getKey());
   }
@@ -55,11 +57,11 @@ public class DijkstraTest {
   @Test
   public void testShortestPathMultipleConnections() {
     // Multiple possible connections with varying weights
-    var result1 = Dijkstra.getShortestPath(graph, 0, 4); // Path 0 -> 1 -> 4
+    var result1 = DijkstraPQ.getShortestPath(graph, 0, 4); // Path 0 -> 1 -> 4
     assertEquals(8.0, result1.getValue(), 0);
     assertEquals(List.of(0, 1, 4), result1.getKey());
 
-    var result2 = Dijkstra.getShortestPath(graph, 0, 6); // Path 0 -> 1 -> 4 -> 6
+    var result2 = DijkstraPQ.getShortestPath(graph, 0, 6); // Path 0 -> 1 -> 4 -> 6
     assertEquals(9.0, result2.getValue(), 0);
     assertEquals(List.of(0, 1, 4, 6), result2.getKey());
   }
@@ -68,7 +70,7 @@ public class DijkstraTest {
   public void testShortestPathLongerRoute() {
     // Check a longer route that goes through several nodes
 
-    var result = Dijkstra.getShortestPath(graph, 2, 6); // Path 2 -> 3 -> 5 -> 6
+    var result = DijkstraPQ.getShortestPath(graph, 2, 6); // Path 2 -> 3 -> 5 -> 6
     assertEquals(7.0, result.getValue(), 0);
     assertEquals(List.of(2, 3, 5, 6), result.getKey());
   }

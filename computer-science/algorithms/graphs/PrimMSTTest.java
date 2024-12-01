@@ -1,3 +1,5 @@
+package algorithms.graphs;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.*;

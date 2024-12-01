@@ -1,3 +1,5 @@
+package algorithms.graphs;
+
 import java.util.*;
 
 public class GraphBFS {
