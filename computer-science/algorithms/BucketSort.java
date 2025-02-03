@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.Vector;
 import java.util.Collections;
 

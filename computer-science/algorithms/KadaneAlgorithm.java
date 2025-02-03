@@ -1,3 +1,5 @@
+package algorithms;
+
 public class KadaneAlgorithm {
   public static int maxSubArraySum(int[] arr) {
     int curSum = 0;

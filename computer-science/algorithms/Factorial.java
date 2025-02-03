@@ -1,3 +1,5 @@
+package algorithms;
+
 // Recursive implementation of n! (n-factorial) calculation
 public class Factorial {
   public static int factorial(int n) {
