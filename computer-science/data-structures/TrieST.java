@@ -1,3 +1,6 @@
+import java.util.Set;
+import java.util.HashSet;
+
 /**
  * The class represents a symbol table of key-value pairs, with string keys and generic values.
  * It supports the usual put, get, and contains methods for symbol table operations.
@@ -91,5 +94,51 @@ public class TrieST<T> {
 
     // delete a node with no value or further connections
     return null;
+  }
+
+  /**
+   * Return the list of all the stored trie keys
+   */
+  public Set<String> keySet() {
+    Set<String> keys = new HashSet<>();
+    collect(root, "", keys);
+    return keys;
+  }
+
+  /**
+   * Returns all the keys having {@code prefix} as a prefix
+   */ 
+  public Set<String> keysWithPrefix(String prefix) {
+    // root of subtree for all strings beginning with the given prefix
+    Node node = get(root, prefix, 0);
+
+    // collect all the keys starting with the node
+    Set<String> keys = new HashSet<>();
+    collect(node, prefix, keys);
+
+    return keys;
+  }
+
+  private void collect(Node node, String key, Set<String> keys) {
+    if (node == null) return;
+    if (node.value != null) keys.add(key);
+    for (int i = 0; i < R; i++)
+      collect(node.next[i], key + (char) i, keys);
+  }
+
+  /**
+   * The longest key that is a prefix of {@code str}
+   */
+  public String longestPrefixOf(String str) {
+    int length = search(root, str, 0, 0);
+    return str.substring(0, length);
+  }
+
+  private int search(Node node, String query, int p, int length) {
+    if (node == null) return length;
+    if (node.value != null) length = p;
+    if (p == query.length()) return length;
+    
+    return search(node.next[query.charAt(p)], query, p + 1, length);
   }
 }

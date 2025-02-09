@@ -1,6 +1,10 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class TrieSTTest {
 
   @Test()
@@ -108,5 +112,60 @@ public class TrieSTTest {
     assertFalse(trie.contains("app"));
     assertTrue(trie.contains("apple"));
     assertEquals(Integer.valueOf(2), trie.get("apple"));
+  }
+
+  @Test()
+  public void testKeySet() {
+    TrieST<Integer> trie = new TrieST<>();
+    trie.put("apple", 1);
+    trie.put("banana", 2);
+    trie.put("grape", 3);
+
+    Set<String> keys = trie.keySet();
+    assertEquals(3, keys.size());
+    assertTrue(keys.contains("apple"));
+    assertTrue(keys.contains("banana"));
+    assertTrue(keys.contains("grape"));
+  }
+
+  @Test()
+  public void testKeysWithPrefix() {
+    TrieST<Integer> trie = new TrieST<>();
+    trie.put("apple", 1);
+    trie.put("app", 2);
+    trie.put("apricot", 3);
+    trie.put("banana", 4);
+    trie.put("grape", 5);
+
+    assertEquals(
+      trie.keysWithPrefix("ap"),
+      new HashSet<>(List.of("app", "apple", "apricot"))
+    );
+    assertEquals(
+      trie.keysWithPrefix("ba"),
+      new HashSet<>(List.of("banana"))
+    );
+    assertEquals(
+      trie.keysWithPrefix("oran"),
+      new HashSet<>()
+    );
+  }
+
+  @Test()
+  public void testLongestPrefix() {
+    TrieST<Integer> trie = new TrieST<>();
+    trie.put("128", 1);
+    trie.put("128.112", 2);
+    trie.put("128.112.055", 3);
+    trie.put("128.112.055.15", 4);
+    trie.put("128.112.136", 5);
+    trie.put("128.112.155.11", 6);
+    trie.put("128.112.155.13", 7);
+    trie.put("128.222", 8);
+    trie.put("128.222.136", 9);
+
+    assertEquals("128", trie.longestPrefixOf("128.166.123.45"));
+    assertEquals("128.112", trie.longestPrefixOf("128.112.100.16"));
+    assertEquals("128.112.136", trie.longestPrefixOf("128.112.136.11"));
   }
 }
